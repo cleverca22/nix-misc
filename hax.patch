@@ -1,0 +1,21 @@
+diff -ru nix-1.11.1-orig/src/libstore/build.cc nix-1.11.1/src/libstore/build.cc
+--- nix-1.11.1-orig/src/libstore/build.cc	2016-02-18 16:11:21.372535034 -0400
++++ nix-1.11.1/src/libstore/build.cc	2016-02-18 16:11:44.866337212 -0400
+@@ -1259,16 +1259,7 @@
+ 
+ static bool canBuildLocally(const BasicDerivation & drv)
+ {
+-    return drv.platform == settings.thisSystem
+-        || isBuiltin(drv)
+-#if __linux__
+-        || (drv.platform == "i686-linux" && settings.thisSystem == "x86_64-linux")
+-        || (drv.platform == "armv6l-linux" && settings.thisSystem == "armv7l-linux")
+-#elif __FreeBSD__
+-        || (drv.platform == "i686-linux" && settings.thisSystem == "x86_64-freebsd")
+-        || (drv.platform == "i686-linux" && settings.thisSystem == "i686-freebsd")
+-#endif
+-        ;
++    return true;
+ }
+ 
+ 
