@@ -1,0 +1,13 @@
+--- old/src/libstore/build.cc	2016-03-09 20:15:18.553113512 -0400
++++ new/src/libstore/build.cc	2016-03-09 20:14:54.256328291 -0400
+@@ -1259,6 +1259,10 @@
+ 
+ static bool canBuildLocally(const BasicDerivation & drv)
+ {
++    StringSet platforms = tokenizeString<StringSet>(settings.get("build-extra-platforms",string(""))," ");
++
++    if (platforms.count(drv.platform) > 0) return true;
++
+     return drv.platform == settings.thisSystem
+         || isBuiltin(drv)
+ #if __linux__
