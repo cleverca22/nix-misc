@@ -1,14 +1,13 @@
-{ stdenv, fetchurl, python, pkgconfig, zlib, glib, user_arch, flex, bison, makeStaticLibraries }:
+{ stdenv, fetchurl, python, pkgconfig, zlib, glib, user_arch, flex, bison, makeStaticLibraries, glibc }:
 
 let
   env2 = makeStaticLibraries stdenv;
-  myzlib = zlib.override { static = true; };
   myglib = glib.override { stdenv = env2; };
 in
 stdenv.mkDerivation rec {
   name = "qemu-user-${user_arch}-${version}";
   version = "2.4.0";
-  buildInputs = [ python pkgconfig myzlib myglib flex bison ];
+  buildInputs = [ python pkgconfig zlib.static myglib flex bison glibc.static ];
   src = fetchurl {
     url = "http://wiki.qemu.org/download/qemu-${version}.tar.bz2";
     sha256 = "0836gqv5zcl0xswwjcns3mlkn18lyz2fiq8rl1ihcm6cpf8vkc3j";
@@ -21,6 +20,7 @@ stdenv.mkDerivation rec {
     "--static"
     "--disable-tools"
   ];
+  NIX_LDFLAGS = [ "-lglib-2.0" ];
   postInstall = ''
     cat <<EOF > $out/bin/register
     #!/bin/sh
