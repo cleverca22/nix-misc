@@ -2,9 +2,7 @@
 
 let
   env2 = makeStaticLibraries stdenv;
-  myzlib = zlib.overrideDerivation (args: {
-    configureFlags = toString args.configureFlags or "" + " --static";
-  });
+  myzlib = zlib.override { static = true; };
   myglib = glib.override { stdenv = env2; };
 in
 stdenv.mkDerivation rec {
