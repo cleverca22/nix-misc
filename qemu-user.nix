@@ -6,7 +6,7 @@ let
 in
 stdenv.mkDerivation rec {
   name = "qemu-user-${user_arch}-${version}";
-  version = "2.4.0";
+  version = "2.6.0";
   buildInputs = [ python pkgconfig zlib.static myglib flex bison glibc.static ];
   src = fetchurl {
     url = "http://wiki.qemu.org/download/qemu-${version}.tar.bz2";
