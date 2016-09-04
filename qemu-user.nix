@@ -20,7 +20,7 @@ stdenv.mkDerivation rec {
     "--static"
     "--disable-tools"
   ];
-  NIX_LDFLAGS = [ "-lglib-2.0" ];
+  NIX_LDFLAGS = [ "-lglib-2.0" "-lssp" ];
   postInstall = ''
     cat <<EOF > $out/bin/register
     #!/bin/sh
