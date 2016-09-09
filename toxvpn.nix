@@ -4,29 +4,34 @@ with lib;
 
 let
   libtoxcoreLocked = stdenv.lib.overrideDerivation libtoxcore (oldAttrs: {
-    name = "libtoxcore-20151110";
+    name = "libtoxcore-20160907";
     src = fetchFromGitHub {
-      owner = "irungentoo";
+      owner = "TokTok";
       repo = "toxcore";
-      rev = "e1089c1779fb1c58f17937108a6ba8c3d39573ae";
-      sha256 = "13dvxqx5xkhmxiyc9lx67fzacibzr32fl3m92qn7g1rb723giha4";
+      rev = "3521898b0cbf398d882496f6382f6c4ea1c23bc1";
+      sha256 = "1jvf0v9cqwd4ssj1iarhgsr05qg48v7yvmbnn3k01jy0lqci8iaq";
     };
   });
-  stdenv2 = stdenvAdapters.keepDebugInfo stdenv;
-in
 
-stdenv.mkDerivation {
-  name = "toxvpn-20151111";
-  buildInputs = [ cmake libtoxcoreLocked jsoncpp libsodium systemd libcap ];
+in stdenv.mkDerivation {
+  name = "toxvpn-20160909";
+
   src = fetchFromGitHub {
-    owner = "cleverca22";
-    repo = "toxvpn";
-    rev = "1d06bb7da277d46abb8595cf152210c4ccf0ba7d";
-    sha256 = "1himrbdgsbkfha1d87ysj2hwyz4a6z9yxqbai286imkya84q7r15";
+    owner  = "cleverca22";
+    repo   = "toxvpn";
+    rev    = "6e188f26fff8bddc1014ee3cc7a7423f9f344a09";
+    sha256 = "1bshc6pzk7z7q7g17cwx9gmlcyzn4szqvdiy0ihbk2xmx9k31c6p";
   };
-  meta = {
-    description = "a tox based vpn program";
-    license = licenses.gpl3;
-    platforms = platforms.linux;
+
+  buildInputs = [ cmake libtoxcoreLocked jsoncpp libsodium libcap ] ++ optional (systemd != null) systemd;
+
+  cmakeFlags = optional (systemd != null) [ "-DSYSTEMD=1" ];
+
+  meta = with stdenv.lib; {
+    description = "A powerful tool that allows one to make tunneled point to point connections over Tox";
+    homepage    = https://github.com/cleverca22/toxvpn;
+    license     = licenses.gpl3;
+    maintainers = with maintainers; [ cleverca22 obadz ];
+    platforms   = platforms.linux;
   };
 }
