@@ -12,6 +12,7 @@ stdenv.mkDerivation rec {
     url = "http://wiki.qemu.org/download/qemu-${version}.tar.bz2";
     sha256 = "0836gqv5zcl0xswwjcns3mlkn18lyz2fiq8rl1ihcm6cpf8vkc3j";
   };
+  patches = [ ./qemu-stack.patch ];
   configureFlags = [
     "--enable-linux-user" "--target-list=${user_arch}-linux-user"
     "--disable-bsd-user" "--disable-system" "--disable-vnc" "--without-pixman"
