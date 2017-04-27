@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
   ];
   NIX_LDFLAGS = [ "-lglib-2.0" "-lssp" ];
   postInstall = ''
-    NIX_LDFLAGS= cc ${./qemu-wrap.c} -D QEMU_ARM_BIN="\"$out/bin/qemu-arm"\" -o $out/bin/qemu-wrap
+    NIX_LDFLAGS= cc -static ${./qemu-wrap.c} -D QEMU_ARM_BIN="\"$out/bin/qemu-arm"\" -o $out/bin/qemu-wrap
     cat <<EOF > $out/bin/register
     #!/bin/sh
     modprobe binfmt_misc
