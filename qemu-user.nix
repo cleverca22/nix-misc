@@ -6,16 +6,17 @@ let
 in
 stdenv.mkDerivation rec {
   name = "qemu-user-${user_arch}-${version}";
-  version = "2.6.0";
+  version = "2.7.0";
   buildInputs = [ python pkgconfig zlib.static myglib flex bison glibc.static ];
   src = fetchurl {
     url = "http://wiki.qemu.org/download/qemu-${version}.tar.bz2";
-    sha256 = "0836gqv5zcl0xswwjcns3mlkn18lyz2fiq8rl1ihcm6cpf8vkc3j";
+    sha256 = "0lqyz01z90nvxpc3nx4djbci7hx62cwvs5zwd6phssds0sap6vij";
   };
   configureFlags = [
     "--enable-linux-user" "--target-list=${user_arch}-linux-user"
     "--disable-bsd-user" "--disable-system" "--disable-vnc" "--without-pixman"
-    "--disable-vnc-tls" "--disable-curses" "--disable-sdl" "--disable-vde"
+    #"--disable-vnc-tls"
+    "--disable-curses" "--disable-sdl" "--disable-vde"
     "--disable-bluez" "--disable-kvm"
     "--static"
     "--disable-tools"
