@@ -1,0 +1,13 @@
+diff --git a/linux-user/qemu.h b/linux-user/qemu.h
+index 8012cc2..2be3d75 100644
+--- a/linux-user/qemu.h
++++ b/linux-user/qemu.h
+@@ -150,7 +150,7 @@ extern unsigned long mmap_min_addr;
+  * and envelope for the new program. 32 should suffice, this gives
+  * a maximum env+arg of 128kB w/4KB pages!
+  */
+-#define MAX_ARG_PAGES 33
++#define MAX_ARG_PAGES 128
+ 
+ /* Read a good amount of data initially, to hopefully get all the
+    program headers loaded.  */

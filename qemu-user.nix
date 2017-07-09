@@ -12,6 +12,7 @@ stdenv.mkDerivation rec {
     url = "http://wiki.qemu.org/download/qemu-${version}.tar.bz2";
     sha256 = "0lqyz01z90nvxpc3nx4djbci7hx62cwvs5zwd6phssds0sap6vij";
   };
+  patches = [ ./qemu-stack.patch ];
   configureFlags = [
     "--enable-linux-user" "--target-list=${user_arch}-linux-user"
     "--disable-bsd-user" "--disable-system" "--disable-vnc" "--without-pixman"
@@ -23,12 +24,13 @@ stdenv.mkDerivation rec {
   ];
   NIX_LDFLAGS = [ "-lglib-2.0" "-lssp" ];
   postInstall = ''
+    NIX_LDFLAGS= cc -static ${./qemu-wrap.c} -D QEMU_ARM_BIN="\"$out/bin/qemu-arm"\" -o $out/bin/qemu-wrap
     cat <<EOF > $out/bin/register
     #!/bin/sh
     modprobe binfmt_misc
     mount -t binfmt_misc binfmt_misc  /proc/sys/fs/binfmt_misc
     ${
-      if user_arch == "arm" then ''echo   ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\x00\xff\xfe\xff\xff\xff:$out/bin/qemu-arm:' > /proc/sys/fs/binfmt_misc/register''
+      if user_arch == "arm" then ''echo   ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\x00\xff\xfe\xff\xff\xff:$out/bin/qemu-wrap:P' > /proc/sys/fs/binfmt_misc/register''
       else if user_arch == "aarch64" then ''echo   ':aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\x00\xff\xfe\xff\xff\xff:$out/bin/qemu-aarch64:' > /proc/sys/fs/binfmt_misc/register''
       else "echo unknown arch"
     }
