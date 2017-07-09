@@ -1,13 +1,11 @@
-diff --git a/linux-user/qemu.h b/linux-user/qemu.h
-index 8012cc2..2be3d75 100644
---- a/linux-user/qemu.h
-+++ b/linux-user/qemu.h
-@@ -150,7 +150,7 @@ extern unsigned long mmap_min_addr;
-  * and envelope for the new program. 32 should suffice, this gives
-  * a maximum env+arg of 128kB w/4KB pages!
+--- a/linux-user/elfload.c	2016-09-02 12:34:22.000000000 -0300
++++ b/linux-user/elfload.c	2017-07-09 18:44:22.420244038 -0300
+@@ -1419,7 +1419,7 @@
+  * dependent on stack size, but guarantee at least 32 pages for
+  * backwards compatibility.
   */
--#define MAX_ARG_PAGES 33
-+#define MAX_ARG_PAGES 128
+-#define STACK_LOWER_LIMIT (32 * TARGET_PAGE_SIZE)
++#define STACK_LOWER_LIMIT (128 * TARGET_PAGE_SIZE)
  
- /* Read a good amount of data initially, to hopefully get all the
-    program headers loaded.  */
+ static abi_ulong setup_arg_pages(struct linux_binprm *bprm,
+                                  struct image_info *info)
