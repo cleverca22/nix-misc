@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
   NIX_LDFLAGS = [ "-lglib-2.0" "-lssp" ];
   enableParallelBuilding = true;
   postInstall = ''
-    cc -static ${./qemu-wrap.c} -D QEMU_ARM_BIN="\"$out/bin/qemu-arm"\" -o $out/bin/qemu-wrap
+    cc -static ${./qemu-wrap.c} -D QEMU_ARM_BIN="\"qemu-${user_arch}"\" -o $out/bin/qemu-wrap
     cat <<EOF > $out/bin/register
     #!${stdenv.shell}
     set -e
