@@ -1,4 +1,5 @@
-{ stdenv, fetchurl, python, pkgconfig, zlib, glib, user_arch, flex, bison, makeStaticLibraries, glibc }:
+{ stdenv, fetchurl, python, pkgconfig, zlib, glib, user_arch, flex, bison,
+makeStaticLibraries, glibc, qemu }:
 
 let
   env2 = makeStaticLibraries stdenv;
@@ -12,11 +13,8 @@ in
 stdenv.mkDerivation rec {
   name = "qemu-user-${user_arch}-${version}";
   version = "2.7.0";
+  inherit (qemu) src;
   buildInputs = [ python pkgconfig zlib.static myglib flex bison glibc.static ];
-  src = fetchurl {
-    url = "http://wiki.qemu.org/download/qemu-${version}.tar.bz2";
-    sha256 = "0lqyz01z90nvxpc3nx4djbci7hx62cwvs5zwd6phssds0sap6vij";
-  };
   patches = [ ./qemu-stack.patch ];
   configureFlags = [
     "--enable-linux-user" "--target-list=${user_arch}-linux-user"
