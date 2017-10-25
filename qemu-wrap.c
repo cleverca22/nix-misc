@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <libgen.h>
 
 #if !defined(QEMU_ARM_BIN)
   #define QEMU_ARM_BIN "qemu-arm"
@@ -25,12 +26,15 @@ int main(int argc, char const* argv[]) {
     return -1;
   }
 
+  char *qemu;
+  asprintf(&qemu, "%s/%s", dirname(argv[0]), QEMU_ARM_BIN);
+
   // Allocate the new argc array to pass to qemu-arm
   const int new_argc = argc + 1;
   char** const new_argv = alloca((new_argc + 1) * sizeof(void *));
 
   // Fill this new array
-  new_argv[0] = strdup(QEMU_ARM_BIN);
+  new_argv[0] = qemu;
   new_argv[1] = strdup("-0");
   new_argv[2] = strdup(argv[2]);
   new_argv[3] = strdup(argv[1]);
