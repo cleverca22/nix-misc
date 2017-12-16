@@ -1,0 +1,29 @@
+diff --git a/src/libstore/derivations.cc b/src/libstore/derivations.cc
+index a0a0d78b..34137035 100644
+--- a/src/libstore/derivations.cc
++++ b/src/libstore/derivations.cc
+@@ -56,6 +56,10 @@ bool BasicDerivation::isBuiltin() const
+ 
+ bool BasicDerivation::canBuildLocally() const
+ {
++    auto extraPlatforms = settings.extraPlatforms.get();
++    if (extraPlatforms.count(platform) > 0)
++        return true;
++
+     return platform == settings.thisSystem
+         || isBuiltin()
+ #if __linux__
+diff --git a/src/libstore/globals.hh b/src/libstore/globals.hh
+index 5c857cbb..d75b5599 100644
+--- a/src/libstore/globals.hh
++++ b/src/libstore/globals.hh
+@@ -286,6 +286,9 @@ public:
+         "Nix store has a valid signature (that is, one signed using a key "
+         "listed in 'trusted-public-keys'."};
+ 
++    Setting<StringSet> extraPlatforms{this, StringSet{}, "build-extra-platforms",
++        "Additional platforms that can be built on the local system, e.g. using qemu-user."};
++
+     Setting<Strings> substituters{this,
+         nixStore == "/nix/store" ? Strings{"https://cache.nixos.org/"} : Strings(),
+         "substituters",
