@@ -8,6 +8,7 @@ with pkgs_host;
 {
   toxvpn = callPackage ./toxvpn.nix {};
   qemu-user-arm = callPackage ./qemu-user.nix { user_arch = "arm"; };
+  qemu-user-x86 = callPackage ./qemu-user.nix { user_arch = "x86_64"; };
   qemu-user-arm64 = callPackage ./qemu-user.nix { user_arch = "aarch64"; };
   nix = pkgs_host.stdenv.lib.overrideDerivation pkgs_host.nix (oldAttrs: {
     patches = ./upgrade.patch;
