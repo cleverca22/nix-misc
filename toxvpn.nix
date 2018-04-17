@@ -6,10 +6,10 @@ let
   libtoxcoreLocked = stdenv.lib.overrideDerivation libtoxcore (oldAttrs: {
     name = "libtoxcore-20160907";
     src = fetchFromGitHub {
-      owner = "cleverca22";
-      repo = "toxcore";
-      rev = "e4cc8c9";
-      sha256 = "01i1cm5rwga7qfhjfyf6k4k410splyrgnd8icr3sldykyma3f85w";
+      owner = "TokTok";
+      repo = "c-toxcore";
+      rev = "6b97acb773622f9abca5ef305cd55bdef1ecc484";
+      sha256 = "0gszhqylsim3b7av671x2yczs20l86qg20qzx9l57x5g8klilyc8";
     };
     NIX_CFLAGS_COMPILE = [ "-DMIN_LOGGER_LEVEL=LOG_TRACE" "-ggdb -Og" ];
     configureFlags = oldAttrs.configureFlags ++ [ "--enable-debug" ];
