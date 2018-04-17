@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, libtoxcore, cmake, jsoncpp, lib, stdenvAdapters, libsodium, systemd, enableDebugging, libcap }:
+{ stdenv, fetchFromGitHub, libtoxcore, cmake, jsoncpp, lib, stdenvAdapters, libsodium, systemd, enableDebugging, libcap, zeromq }:
 
 with lib;
 
@@ -6,11 +6,15 @@ let
   libtoxcoreLocked = stdenv.lib.overrideDerivation libtoxcore (oldAttrs: {
     name = "libtoxcore-20160907";
     src = fetchFromGitHub {
-      owner = "TokTok";
+      owner = "cleverca22";
       repo = "toxcore";
-      rev = "3521898b0cbf398d882496f6382f6c4ea1c23bc1";
-      sha256 = "1jvf0v9cqwd4ssj1iarhgsr05qg48v7yvmbnn3k01jy0lqci8iaq";
+      rev = "e4cc8c9";
+      sha256 = "01i1cm5rwga7qfhjfyf6k4k410splyrgnd8icr3sldykyma3f85w";
     };
+    NIX_CFLAGS_COMPILE = [ "-DMIN_LOGGER_LEVEL=LOG_TRACE" "-ggdb -Og" ];
+    configureFlags = oldAttrs.configureFlags ++ [ "--enable-debug" ];
+
+    dontStrip = true;
   });
 
 in stdenv.mkDerivation {
@@ -19,13 +23,23 @@ in stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner  = "cleverca22";
     repo   = "toxvpn";
-    rev    = "6e188f26fff8bddc1014ee3cc7a7423f9f344a09";
-    sha256 = "1bshc6pzk7z7q7g17cwx9gmlcyzn4szqvdiy0ihbk2xmx9k31c6p";
+    rev    = "7450ba061229fd0e9e81f98b203d8e9964463f5e";
+    sha256 = "0yj1c3j9acc3rxgrwpv1qhms2f2v0hhhc6xc0ks4nfd72q24glrf";
   };
 
-  buildInputs = [ cmake libtoxcoreLocked jsoncpp libsodium libcap ] ++ optional (systemd != null) systemd;
+  dontStrip = true;
 
-  cmakeFlags = optional (systemd != null) [ "-DSYSTEMD=1" ];
+  NIX_CFLAGS_COMPILE = [ "-ggdb -Og" ];
+
+  buildInputs = [ cmake libtoxcoreLocked jsoncpp libsodium libcap zeromq ] ++ optional (systemd != null) systemd;
+
+  cmakeFlags = (optional (systemd != null) [ "-DSYSTEMD=1" ]) ++
+    [ ''-DBOOTSTRAP_PATH=''${out}/share/toxvpn/bootstrap.json'' ];
+
+  postInstall = ''
+    mkdir -pv ''${out}/share/toxvpn
+    cp -vi ../bootstrap.json ''${out}/share/toxvpn/bootstrap.json
+  '';
 
   meta = with stdenv.lib; {
     description = "A powerful tool that allows one to make tunneled point to point connections over Tox";
