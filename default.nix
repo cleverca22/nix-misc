@@ -26,7 +26,7 @@ with pkgs_host;
     };
   } ''
     sleep 600
-    echo foo
+    echo bar
     touch $out
   '';
 }
