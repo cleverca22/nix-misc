@@ -15,6 +15,7 @@ with pkgs_host;
   });
   reallySlow = runCommand "reallySlow" {} ''
     sleep ${toString (3600 * 13)}
+    echo foo
     touch $out
   '';
   sortaSlow = runCommand "sortaSlow" {
@@ -25,6 +26,7 @@ with pkgs_host;
     };
   } ''
     sleep 600
+    echo foo
     touch $out
   '';
 }
