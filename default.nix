@@ -21,7 +21,7 @@ with pkgs_host;
   sortaSlow = runCommand "sortaSlow" {
     meta = {
       timeout = 60;
-      maxSilent = 30;
+      maxSilent = 90;
       description = "testing";
     };
   } ''
