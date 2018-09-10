@@ -26,7 +26,7 @@ with pkgs_host;
     };
   } ''
     sleep 600
-    echo test2
+    echo test3
     touch $out
   '';
 }
