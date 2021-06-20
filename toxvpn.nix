@@ -3,7 +3,7 @@
 with lib;
 
 let
-  libtoxcoreLocked = stdenv.lib.overrideDerivation libtoxcore (oldAttrs: {
+  libtoxcoreLocked = lib.overrideDerivation libtoxcore (oldAttrs: {
     name = "libtoxcore-20160907";
     src = fetchFromGitHub {
       owner = "TokTok";
@@ -41,7 +41,7 @@ in stdenv.mkDerivation {
     cp -vi ../bootstrap.json ''${out}/share/toxvpn/bootstrap.json
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A powerful tool that allows one to make tunneled point to point connections over Tox";
     homepage    = https://github.com/cleverca22/toxvpn;
     license     = licenses.gpl3;
