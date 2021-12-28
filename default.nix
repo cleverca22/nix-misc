@@ -13,11 +13,6 @@ with pkgs_host;
   #nix_arm6 = pkgs_arm6.stdenv.lib.overrideDerivation pkgs_arm6.nix (oldAttrs: {
   #  patches = ./upgrade.patch;
   #});
-  reallySlow = runCommand "reallySlow" {} ''
-    sleep ${toString (3600 * 13)}
-    echo foo
-    touch $out
-  '';
   sortaSlow = runCommand "sortaSlow" {
     meta = {
       timeout = 60;
