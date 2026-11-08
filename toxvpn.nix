@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, libtoxcore, cmake, jsoncpp, lib, stdenvAdapters, libsodium, systemd, enableDebugging, libcap, zeromq }:
+{ stdenv, fetchFromGitHub, libtoxcore, cmake, nlohmann_json, lib, stdenvAdapters, libsodium, systemd, enableDebugging, libcap, zeromq }:
 
 with lib;
 
@@ -23,23 +23,18 @@ in stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner  = "cleverca22";
     repo   = "toxvpn";
-    rev    = "7450ba061229fd0e9e81f98b203d8e9964463f5e";
-    sha256 = "0yj1c3j9acc3rxgrwpv1qhms2f2v0hhhc6xc0ks4nfd72q24glrf";
+    rev    = "300991571421d6bbcbc9786c8e7a479b7b24d82b";
+    sha256 = "sha256-7kJ/vLJ+xYD2A4DaDGrW0NScByU/etINhPhZRRnS6Yw=";
   };
 
   dontStrip = true;
 
   NIX_CFLAGS_COMPILE = [ "-ggdb -Og" ];
 
-  buildInputs = [ cmake libtoxcoreLocked jsoncpp libsodium libcap zeromq ] ++ optional (systemd != null) systemd;
+  buildInputs = [ cmake libtoxcore nlohmann_json libsodium libcap zeromq ] ++ optional (systemd != null) systemd;
 
   cmakeFlags = (optional (systemd != null) [ "-DSYSTEMD=1" ]) ++
     [ ''-DBOOTSTRAP_PATH=''${out}/share/toxvpn/bootstrap.json'' ];
-
-  postInstall = ''
-    mkdir -pv ''${out}/share/toxvpn
-    cp -vi ../bootstrap.json ''${out}/share/toxvpn/bootstrap.json
-  '';
 
   meta = with lib; {
     description = "A powerful tool that allows one to make tunneled point to point connections over Tox";
